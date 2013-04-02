@@ -1,0 +1,84 @@
+body {
+	background: #E5E5E5;
+	font-family: Georgia;
+}
+
+header {
+	background: #FFFFFF;
+	color: #000000;
+	border: 1px solid #CCCCCC;
+	border-radius: 15px;
+	padding: 10px;
+	font-size: 25px;
+	margin-top: 50px;
+	margin-left: 200px;
+	margin-right: 200px;
+	text-align: center;
+}
+
+a, input[type=submit] {
+	background: #FFFFFF;
+	color: #000000;
+	border: 1px solid #CCCCCC;
+	border-radius: 10px;
+	padding: 2px 5px;
+	text-align: center;
+	text-decoration: none;
+}
+
+a:hover, a:active, input[type=submit]:hover, input[type=submit]:hover {
+	background: #000000;
+	color: #FFFFFF;
+	cursor: pointer;
+}
+
+a#big {
+	padding: 10px 15px;
+	font-weight: bold;
+}
+
+table.new, tr.new, td.new {
+	background: #FFFFFF;
+	color: #000000;
+	border: 1px solid #CCCCCC;
+	border-radius: 15px;
+	padding: 10px 15px;
+	text-align: center;
+	text-decoration: none;
+}
+
+input[type=text], input[type=password], input[type=email] {
+	background: #FFFFFF;
+	opacity: 1.25;
+	color: #000000;
+	border: 1px solid #CCCCCC;
+	border-radius: 5px;
+	padding: 2px 5px;
+	text-align: center;
+	text-decoration: none;
+}
+
+div {
+	background: #FFFFFF;
+	color: #000000;
+	border: 1px solid #CCCCCC;
+	border-radius: 15px;
+	padding: 10px;
+	font-size: 15px;
+	margin-top: 25px;
+	margin-left: 50px;
+	margin-right: 50px;
+	text-align: center;
+}
+
+span.Notification {
+	background: #E5E5E5;
+	border: 1px solid #cccccc;
+	border-radius: 15px;
+	padding: 10px;
+	color: #000000;
+	text-align: center;
+	text-decoration: none;
+	left: 100px;
+	right: 100px;
+}
