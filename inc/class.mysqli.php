@@ -24,6 +24,7 @@ class database
 	public $result;
 	public $rows;
 	private $conn;
+	private $config;
 	
 	public function __construct($host, $port, $user, $pass, $name)
 	{
@@ -32,16 +33,12 @@ class database
 		$this->user = $user;
 		$this->pass = $pass;
 		$this->name = $name;
+		$this->config = new config();
 		
 		$this->conn = new mysqli($this->host, $this->user, $this->pass, $this->name, $this->port);
 		
-		if (mysqli_connect_errno())
+		if ($this->conn->connect_errno)
 			printf('Connect failed: %s', mysqli_connect_error());
-	}
-	
-	public function destruct()
-	{
-		$this->conn->close();
 	}
 	
 	public function login_user($email, $password)
@@ -51,6 +48,7 @@ class database
 		$stmt = $this->conn->prepare('SELECT `id`, `name` FROM `users` WHERE `email` = ? AND `pass` = ?');
 		$stmt->bind_param('ss', $email, $pass_hash);
 		$stmt->execute();
+		$stmt->store_result();
 		
 		if ($stmt->num_rows ==  1)
 		{
@@ -60,11 +58,15 @@ class database
 			$code = (string)rand(0, time());
 			$hash = hash('md5', strrev($code));
 			
-			$duration = time() + $config->get_int('cookie', 'duration');
-			setcookie($config->get_string('cookie', 'prefix').'cdis_user_id', $id, $duration, $config->get_string('site', 'path'), $config->get_string('site', 'url'));
-			setcookie($config->get_string('cookie', 'prefix').'cdis_user_name', $name, $duration, $config->get_string('site', 'path'), $config->get_string('site', 'url'));
-			setcookie($config->get_string('cookie', 'prefix').'cdis_user_code', $code, $duration, $config->get_string('site', 'path'), $config->get_string('site', 'url'));
-			setcookie($config->get_string('cookie', 'prefix').'cdis_user_hash', $hash, $duration, $config->get_string('site', 'path'), $config->get_string('site', 'url'));
+			$duration = time() + $this->config->get_int('cookie', 'duration');
+			$site_path = $this->config->get_string('site', 'path');
+			$site_url = $this->config->get_string('site', 'url');
+			$cookie_prefix = $this->config->get_string('cookie', 'prefix');
+			
+			setcookie($cookie_prefix.'cdis_user_id', $id, $duration, $site_path, $site_url);
+			setcookie($cookie_prefix.'cdis_user_name', $name, $duration, $site_path, $site_url);
+			setcookie($cookie_prefix.'cdis_user_code', $code, $duration, $site_path, $site_url);
+			setcookie($cookie_prefix.'cdis_user_hash', $hash, $duration, $site_path, $site_url);
 			
 			$stmt->close();
 			return true;
@@ -79,6 +81,7 @@ class database
 		$stmt = $this->conn->prepare('SELECT `id`, `name` FROM `users` WHERE `id` = ? AND `name` = ?');
 		$stmt->bind_param('is', $data['id'], $data['name']);
 		$stmt->execute();
+		$stmt->store_result();
 		
 		if ($stmt->num_rows == 1)
 		{
@@ -94,6 +97,29 @@ class database
 		
 		$stmt->close();
 		return false;
+	}
+	
+	public function get_banned($id)
+	{
+		$stmt = $this->conn->prepare('SELECT `suspended` FROM `users` WHERE `id` = ? AND `suspended` != "0"');
+		$stmt->bind_param('i', $id);
+		$stmt->execute();
+		$stmt->store_result();
+		
+		if ($stmt->num_rows == 1)
+		{
+			$stmt->bind_result($reason);
+			$stmt->fetch();
+			
+			return '<span style="color: red"><strong>banned</strong></span>, Reason: '.$reason;
+		}
+		
+		return 'active';
+	}
+	
+	public function destruct()
+	{
+		$this->conn->close();
 	}
 }
 

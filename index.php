@@ -17,8 +17,6 @@
  * along with this program. If not, see http://www.gnu.org/licenses/.
  */
 
-error_reporting(E_ALL|E_STRICT);
-
 require_once('inc/config.inc.php');
 require_once('inc/class.mysqli.php');
 require_once('inc/class.user.php');
@@ -72,8 +70,17 @@ if (!$db->verify_user($user_data))
 }
 else
 {
-	print('			<br />
-			<h1>Welcome, '.$user_data['name'].'</h1>
+	print('			<h1>Welcome, '.$user_data['name'].'!</h1>
+			<table class="new" cellspacing="5" border="0" align="center">
+				<tr>
+					<th class="new">Option</th>
+					<th class="new">Value</th>
+				</tr>
+				<tr>
+					<td>Account status</td>
+					<td>'.$db->get_banned($user_data['id']).'</td>
+				</tr>
+			</table>
 ');
 }
 

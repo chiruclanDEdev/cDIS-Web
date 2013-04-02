@@ -37,7 +37,7 @@ a#big {
 	font-weight: bold;
 }
 
-table.new, tr.new, td.new {
+table.new, tr.new, td.new, th.new {
 	background: #FFFFFF;
 	color: #000000;
 	border: 1px solid #CCCCCC;
